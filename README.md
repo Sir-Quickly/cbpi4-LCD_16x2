@@ -1,8 +1,8 @@
-![](https://img.shields.io/badge/CBPi%204%20addin-functionable-green.svg)  ![](https://img.shields.io/github/license/JamFfm/cbpi4-LCDisplay) ![](https://img.shields.io/github/last-commit/JamFfm/cbpi4-LCDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/cbpi4-LCDisplay.svg?style=flat)
+#![](https://img.shields.io/badge/CBPi%204%20addin-functionable-green.svg)  ![](https://img.shields.io/github/license/JamFfm/cbpi4-LCDisplay) ![](https://img.shields.io/github/last-commit/JamFfm/cbpi4-LCDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/cbpi4-LCDisplay.svg?style=flat)
 
 # **LCD add-on for CraftBeerPi 4** #
 
-![](https://github.com/JamFfm/cbpi4-LCDisplay/blob/main/LCDPhoto.jpg "LCDDisplay Default Display")
+![](https://github.com/Sir-Quickly/cbpi4-LCD_16x2/blob/master/StartScreen.png "LCDDisplay Default Display")
 
 With this add-on you can display your Brewing steps temperatures on a 20x4 i2c LCD Display.
 In the future: In addition you can display the target-temperature and current-temperature of each fermenter.
