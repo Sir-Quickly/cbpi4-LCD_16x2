@@ -142,14 +142,20 @@ class LCD_16x2(CBPiExtension):
         self._task = asyncio.create_task(self.run())
 
     async def run(self):
-        logger.info('LCDisplay - Info: Starting background task')
+        plugin = await self.cbpi.plugin.load_plugin_list("cbpi4-LCD_16x2")
+        self.version=plugin[0].get("Version","0.0.0")
+        self.name=plugin[0].get("Name","cbpi4-LCD_16x2")
+        logger.info('LCDisplay - Info: Plugin Version %s' % self.version)
+        logger.info('LCDisplay - Info: Plugin Name %s' % self.name)
 
         address = int(await self.set_lcd_address(), 16)
         logger.info('LCDisplay - LCD address: %s' % await self.set_lcd_address())
 
         charmap = await self.set_lcd_charmap()
         logger.info('LCDisplay - LCD charmap: %s' % charmap)
-
+        
+        
+        
         global lcd
         try:
             lcd = CharLCD(i2c_expander='PCF8574', address=address, port=1, cols=20, rows=4, dotsize=8, charmap=charmap,
@@ -227,9 +233,9 @@ class LCD_16x2(CBPiExtension):
             lcd.write_string((strftime("%Y-%m-%d %H:%M:%S", time.localtime())).ljust(20))       
         else:
             lcd.cursor_pos = (0, 0)
-            lcd.write_string(("CBPI       %s" % cbpi_version).ljust(16))  
+            lcd.write_string(("%s" % breweryname).ljust(16)[:16])  
             lcd.cursor_pos = (1, 0)
-            lcd.write_string(("%s" % breweryname).ljust(16)[:16])
+            lcd.write_string(("CBPI       %s" % cbpi_version).ljust(16))
         pass
         await asyncio.sleep(1)
 
@@ -657,7 +663,7 @@ class LCD_16x2(CBPiExtension):
         if lcd_address is None:
             try:
                 await self.cbpi.config.add("LCD_Address", '0x27', ConfigType.STRING,
-                                           "LCD address like 0x27 or 0x3f, CBPi reboot required")
+                                           "LCD address like 0x27 or 0x3f, CBPi reboot required",source=self.name)
                 logger.info("LCD_Address added")
                 lcd_address = self.cbpi.config.get("LCD_Address", None)
             except Exception as e:
@@ -673,8 +679,8 @@ class LCD_16x2(CBPiExtension):
             logger.info("LCD_Charactermap added")
             try:
                 await self.cbpi.config.add("LCD_Charactermap", 'A00', ConfigType.SELECT, "LCD Charactermap like A00, "
-                                                                                         "A02, CBPi reboot required",
-                                           [{"label": "A00", "value": "A00"}, {"label": "A02", "value": "A02"}])
+                                                                                         "A02, CBPi reboot required",source=self.name,
+                                           options=[{"label": "A00", "value": "A00"}, {"label": "A02", "value": "A02"}])
                 lcd_charmap = self.cbpi.config.get("LCD_Charactermap", None)
             except Exception as e:
                 logger.warning('Unable to update config')
@@ -690,7 +696,7 @@ class LCD_16x2(CBPiExtension):
             try:
                 await self.cbpi.config.add('LCD_Refresh', 3, ConfigType.SELECT,
                                            'Time to remain till next display in sec, NO! CBPi reboot '
-                                           'required', [{"label": "1s", "value": 1}, {"label": "2s", "value": 2},
+                                           'required',source=self.name,options=[{"label": "1s", "value": 1}, {"label": "2s", "value": 2},
                                                         {"label": "3s", "value": 3}, {"label": "4s", "value": 4},
                                                         {"label": "5s", "value": 5}, {"label": "6s", "value": 6}])
                 ref = self.cbpi.config.get('LCD_Refresh', None)
@@ -708,7 +714,7 @@ class LCD_16x2(CBPiExtension):
             try:
                 await self.cbpi.config.add('LCD_Display_Mode', 'Multidisplay', ConfigType.SELECT,
                                            'select the mode of the LCD Display, consult readme, NO! CBPi reboot '
-                                           'required', [{"label": "Multidisplay", "value": 'Multidisplay'},
+                                           'required',source=self.name,options=[{"label": "Multidisplay", "value": 'Multidisplay'},
                                                         {"label": "Singledisplay", "value": 'Singledisplay'},
                                                         {"label": "Sensordisplay", "value": 'Sensordisplay'}])
                 mode = self.cbpi.config.get('LCD_Display_Mode', None)
@@ -729,7 +735,7 @@ class LCD_16x2(CBPiExtension):
                                            'ONLY use with this fork: https://github.com/avollkopf/craftbeerpi4, '
                                            'select a sensor which is representing the sensortype you want to monitor '
                                            'in LCD, consult readme, '
-                                           'NO! CBPi reboot required')
+                                           'NO! CBPi reboot required',source=self.name)
                 logger.info("LCD_Display_Sensortype added")
                 sensor_id = self.cbpi.config.get('LCD_Display_Sensortype', None)
             except Exception as e:
@@ -752,8 +758,8 @@ class LCD_16x2(CBPiExtension):
             try:
                 await self.cbpi.config.add('LCD_Display_Sensortype', 'OneWire', ConfigType.SELECT,
                                            'select the type of sensors to be displayed in LCD, consult readme, '
-                                           'NO! CBPi reboot required',
-                                           [{"label": "OneWire", "value": 'OneWire'},
+                                           'NO! CBPi reboot required',source=self.name,
+                                           options=[{"label": "OneWire", "value": 'OneWire'},
                                             {"label": "iSpindle", "value": 'iSpindle'},
                                             {"label": "MQTTSensor", "value": 'MQTTSensor'},
                                             {"label": "eManometer", "value": 'eManometer'},
@@ -776,7 +782,7 @@ class LCD_16x2(CBPiExtension):
             try:
                 await self.cbpi.config.add('LCD_Singledisplay_Kettle', '', ConfigType.KETTLE,
                                            'select the kettle to be displayed in LCD, consult readme, '
-                                           'NO! CBPi reboot required')
+                                           'NO! CBPi reboot required',source=self.name)
                 logger.info("LCD_Singledisplay_Kettle added")
                 kettle_id = self.cbpi.config.get('LCD_Singledisplay_Kettle', None)
             except Exception as e:
