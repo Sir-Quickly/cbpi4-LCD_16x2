@@ -13,6 +13,7 @@ setup(name='cbpi4-LCD_16x2',
       author_email='sir.quickly0@googlemail.com',
       url='https://github.com/Sir-Quickly/cbpi4-LCD_16x2',
       license='GPLv3',
+      keywords='globalsettings',
       include_package_data=True,
       package_data={
           # If any package contains *.txt or *.rst files, include them:

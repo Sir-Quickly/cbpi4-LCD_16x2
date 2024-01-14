@@ -663,7 +663,7 @@ class LCD_16x2(CBPiExtension):
         if lcd_address is None:
             try:
                 await self.cbpi.config.add("LCD_Address", '0x27', ConfigType.STRING,
-                                           "LCD address like 0x27 or 0x3f, CBPi reboot required",source=self.name)
+                                           "LCD address like 0x27 or 0x3f, CBPi reboot required", source="cbpi4-buzzer")
                 logger.info("LCD_Address added")
                 lcd_address = self.cbpi.config.get("LCD_Address", None)
             except Exception as e:
@@ -679,7 +679,7 @@ class LCD_16x2(CBPiExtension):
             logger.info("LCD_Charactermap added")
             try:
                 await self.cbpi.config.add("LCD_Charactermap", 'A00', ConfigType.SELECT, "LCD Charactermap like A00, "
-                                                                                         "A02, CBPi reboot required",source=self.name,
+                                                                                         "A02, CBPi reboot required", source=self.name,
                                            options=[{"label": "A00", "value": "A00"}, {"label": "A02", "value": "A02"}])
                 lcd_charmap = self.cbpi.config.get("LCD_Charactermap", None)
             except Exception as e:
@@ -696,7 +696,7 @@ class LCD_16x2(CBPiExtension):
             try:
                 await self.cbpi.config.add('LCD_Refresh', 3, ConfigType.SELECT,
                                            'Time to remain till next display in sec, NO! CBPi reboot '
-                                           'required',source=self.name,options=[{"label": "1s", "value": 1}, {"label": "2s", "value": 2},
+                                           'required', source=self.name,options=[{"label": "1s", "value": 1}, {"label": "2s", "value": 2},
                                                         {"label": "3s", "value": 3}, {"label": "4s", "value": 4},
                                                         {"label": "5s", "value": 5}, {"label": "6s", "value": 6}])
                 ref = self.cbpi.config.get('LCD_Refresh', None)
