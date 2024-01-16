@@ -5,10 +5,22 @@ import fcntl
 import struct
 import logging
 import asyncio
-from RPLCD.i2c import CharLCD
 from time import strftime
 from cbpi.api import *
 from cbpi.api.config import ConfigType
+
+from RPLCD.i2c import CharLCD
+
+I2C_EXPANDER='PCF8574'
+#I2C_EXPANDER='PCF8574_POLLIN'
+#if I2C_EXPANDER=='PCF8574_POLLIN':
+#    from .i2c import CharLCD
+#else:
+#    from .i2c import CharLCD
+#    #from RPLCD.i2c import CharLCD
+#pass
+
+
 # from cbpi.api.dataclasses import NotificationAction, NotificationType
 
 # from cbpi.api.dataclasses import NotificationType  # INFO, WARNING, ERROR, SUCCESS #  TODO
@@ -133,8 +145,7 @@ wheel = (
 	  0b10101,
 	  0b01110,
 	  0b00100
-	)
-
+)
 
 class LCD_16x2(CBPiExtension):
     def __init__(self, cbpi):
@@ -157,8 +168,9 @@ class LCD_16x2(CBPiExtension):
         
         
         global lcd
+        #if DEBUG: logger.info('LCDisplay - Info: I2C-Expander. %s' % I2C_EXPANDER)
         try:
-            lcd = CharLCD(i2c_expander='PCF8574', address=address, port=1, cols=20, rows=4, dotsize=8, charmap=charmap,
+            lcd = CharLCD(i2c_expander=I2C_EXPANDER, address=address, port=1, cols=20, rows=4, dotsize=8, charmap=charmap,
                           auto_linebreaks=True, backlight_enabled=True)
             lcd.create_char(0, bierkrug)  # u"\x00"  -->beerglass symbol
             lcd.create_char(1, cool)  # u"\x01"  -->Ice symbol
@@ -264,7 +276,7 @@ class LCD_16x2(CBPiExtension):
 
         # what if kettle_id ="" like a forgotten settings entry?  # todo
         # get default Kettle from Settings
-        if kettle_id is None or kettle_id is "":
+        if kettle_id == None or kettle_id == "":
             kettle_id = self.cbpi.config.get('MASH_TUN', None)
         pass
 
@@ -383,7 +395,7 @@ class LCD_16x2(CBPiExtension):
 
         # what if kettle_id ="" like a forgotten settings entry?  # todo
         # get default Kettle from Settings
-        if kettle_id is None or kettle_id is "":
+        if kettle_id == None or kettle_id == "":
             kettle_id = self.cbpi.config.get('MASH_TUN', None)
         pass
 
